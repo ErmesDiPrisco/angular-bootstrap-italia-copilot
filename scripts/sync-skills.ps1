@@ -1,148 +1,71 @@
-$ErrorActionPreference = "Stop"
+﻿# Maintenance only: replaces bundled skill copies from already available sources.
+[CmdletBinding(SupportsShouldProcess)]
+param()
 
-Write-Host "Syncing Agent Skills..."
+$ErrorActionPreference = 'Stop'
+$pluginRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
+$skillsRoot = [IO.Path]::GetFullPath((Join-Path $pluginRoot 'skills'))
+$sources = [ordered]@{
+    'angular-developer' = @('external/angular-skills/angular-developer', $null)
+    'angular-bootstrap-italia' = @('external/angular-bootstrap-italia-skill/angular-bootstrap-italia', $null)
+    'ponytail' = @('external/ponytail/skills/ponytail', 'external/ponytail/LICENSE')
+    'caveman' = @('external/caveman/skills/caveman', 'external/caveman/LICENSE')
+    'modern-css' = @('external/modern-css', $null)
+    'web-typography' = @('external/wondelai-skills/web-typography', 'external/wondelai-skills/LICENSE')
+}
 
-# ============================================================
-# Sources
-# ============================================================
+# Validate every source and the resolved deletion boundaries before changing anything.
+$jobs = foreach ($name in $sources.Keys) {
+    $source = [IO.Path]::GetFullPath((Join-Path $pluginRoot $sources[$name][0]))
+    $target = [IO.Path]::GetFullPath((Join-Path $skillsRoot $name))
+    if (-not $target.StartsWith($skillsRoot + [IO.Path]::DirectorySeparatorChar,
+            [StringComparison]::OrdinalIgnoreCase) -or
+            [IO.Path]::GetDirectoryName($target) -ne $skillsRoot) {
+        throw "Unsafe sync target: $target"
+    }
+    if (-not (Test-Path -LiteralPath (Join-Path $source 'SKILL.md') -PathType Leaf)) {
+        throw "Missing source skill: $source. No bundled skills were changed."
+    }
+    foreach ($directory in @($skillsRoot, $target)) {
+        if ((Test-Path -LiteralPath $directory) -and
+                ((Get-Item -LiteralPath $directory -Force).Attributes -band [IO.FileAttributes]::ReparsePoint)) {
+            throw "Refusing linked sync target: $directory"
+        }
+    }
+    if (Test-Path -LiteralPath $target -PathType Container) {
+        if (Get-ChildItem -LiteralPath $target -Force -Recurse |
+                Where-Object { $_.Attributes -band [IO.FileAttributes]::ReparsePoint }) {
+            throw "Refusing target containing links: $target"
+        }
+    }
+    if (Get-ChildItem -LiteralPath $source -Force -Recurse |
+            Where-Object { $_.Attributes -band [IO.FileAttributes]::ReparsePoint }) {
+        throw "Refusing source containing links: $source"
+    }
+    $license = $null
+    if ($sources[$name][1]) {
+        $license = Join-Path $pluginRoot $sources[$name][1]
+        if (-not (Test-Path -LiteralPath $license -PathType Leaf)) {
+            throw "Missing upstream license: $license. No bundled skills were changed."
+        }
+    }
+    [PSCustomObject]@{ Name = $name; Source = $source; Target = $target; License = $license }
+}
 
-$angularSource = "external\angular-skills\angular-developer"
-$bootstrapItaliaSource = "external\angular-bootstrap-italia-skill\angular-bootstrap-italia"
-$ponytailSource = "external\ponytail\skills\ponytail"
-$cavemanSource = "external\caveman\skills\caveman"
-$modernCssSource = "external\modern-css"
-$webTypographySource = "external\wondelai-skills\web-typography"
-
-# ============================================================
-# Targets
-# ============================================================
-
-$angularTarget = "skills\angular-developer"
-$bootstrapItaliaTarget = "skills\angular-bootstrap-italia"
-$ponytailTarget = "skills\ponytail"
-$cavemanTarget = "skills\caveman"
-$modernCssTarget = "skills\modern-css"
-$webTypographyTarget = "skills\web-typography"
-
-$targets = @(
-    $angularTarget,
-    $bootstrapItaliaTarget,
-    $ponytailTarget,
-    $cavemanTarget,
-    $modernCssTarget,
-    $webTypographyTarget
-)
-
-# ============================================================
-# Remove existing synced skills
-# ============================================================
-
-foreach ($target in $targets) {
-    if (Test-Path $target) {
-        Write-Host "Removing existing $target..."
-        Remove-Item $target -Recurse -Force
+foreach ($job in $jobs) {
+    if ($PSCmdlet.ShouldProcess($job.Target, 'Replace bundled skill from verified local source')) {
+        if (Test-Path -LiteralPath $job.Target) {
+            Remove-Item -LiteralPath $job.Target -Recurse -Force
+        }
+        New-Item -ItemType Directory -Path $job.Target -Force | Out-Null
+        # Source roots can be Git submodules. Never distribute their .git pointers.
+        Get-ChildItem -LiteralPath $job.Source -Force |
+            Where-Object { $_.Name -ne '.git' } |
+            ForEach-Object { Copy-Item -LiteralPath $_.FullName -Destination $job.Target -Recurse -Force }
+        if ($job.License) {
+            Copy-Item -LiteralPath $job.License -Destination (Join-Path $job.Target 'LICENSE') -Force
+        }
+        Write-Host "Synced $($job.Name)"
     }
 }
-
-# ============================================================
-# Validate sources
-# ============================================================
-
-if (-not (Test-Path $angularSource)) {
-    throw "Angular skill not found at $angularSource"
-}
-
-if (-not (Test-Path $bootstrapItaliaSource)) {
-    throw "Bootstrap Italia skill not found at $bootstrapItaliaSource"
-}
-
-if (-not (Test-Path $ponytailSource)) {
-    throw "Ponytail skill not found at $ponytailSource"
-}
-
-if (-not (Test-Path $cavemanSource)) {
-    throw "Caveman skill not found at $cavemanSource"
-}
-
-if (-not (Test-Path $modernCssSource)) {
-    throw "Modern CSS skill not found at $modernCssSource"
-}
-
-if (-not (Test-Path $webTypographySource)) {
-    throw "Web Typography skill not found at $webTypographySource"
-}
-
-# ============================================================
-# Copy skills
-# ============================================================
-
-Write-Host "Copying angular-developer..."
-Copy-Item `
-    $angularSource `
-    $angularTarget `
-    -Recurse
-
-Write-Host "Copying angular-bootstrap-italia..."
-Copy-Item `
-    $bootstrapItaliaSource `
-    $bootstrapItaliaTarget `
-    -Recurse
-
-Write-Host "Copying ponytail..."
-Copy-Item `
-    $ponytailSource `
-    $ponytailTarget `
-    -Recurse
-
-Write-Host "Copying caveman..."
-Copy-Item `
-    $cavemanSource `
-    $cavemanTarget `
-    -Recurse
-
-Write-Host "Copying modern-css..."
-Copy-Item `
-    $modernCssSource `
-    $modernCssTarget `
-    -Recurse
-
-Write-Host "Copying web-typography..."
-Copy-Item `
-    $webTypographySource `
-    $webTypographyTarget `
-    -Recurse
-
-# ============================================================
-# Final validation
-# ============================================================
-
-Write-Host ""
-Write-Host "Validating synced skills..."
-
-$skillFiles = @(
-    "skills\angular-developer\SKILL.md",
-    "skills\angular-bootstrap-italia\SKILL.md",
-    "skills\ponytail\SKILL.md",
-    "skills\caveman\SKILL.md",
-    "skills\modern-css\SKILL.md",
-    "skills\web-typography\SKILL.md"
-)
-
-foreach ($skillFile in $skillFiles) {
-    if (-not (Test-Path $skillFile)) {
-        throw "Synced skill is missing SKILL.md: $skillFile"
-    }
-
-    Write-Host "[OK] $skillFile"
-}
-
-Write-Host ""
-Write-Host "Skills synced successfully."
-Write-Host ""
-Write-Host "Available skills:"
-Write-Host " - angular-developer"
-Write-Host " - angular-bootstrap-italia"
-Write-Host " - ponytail"
-Write-Host " - caveman"
-Write-Host " - modern-css"
-Write-Host " - web-typography"
+Write-Host 'Run scripts/validate-plugin.py and review the diff before distributing.'
