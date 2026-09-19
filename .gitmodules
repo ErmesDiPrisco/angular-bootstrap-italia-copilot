@@ -1,0 +1,18 @@
+[submodule "external/angular-skills"]
+	path = external/angular-skills
+	url = https://github.com/angular/skills.git
+[submodule "external/angular-bootstrap-italia-skill"]
+	path = external/angular-bootstrap-italia-skill
+	url = https://github.com/ErmesDiPrisco/angular-bootstrap-italia.git
+[submodule "external/ponytail"]
+	path = external/ponytail
+	url = https://github.com/DietrichGebert/ponytail.git
+[submodule "external/caveman"]
+	path = external/caveman
+	url = https://github.com/JuliusBrussee/caveman.git
+[submodule "external/modern-css"]
+	path = external/modern-css
+	url = https://github.com/mikezupper/modern-css-skill.git
+[submodule "external/wondelai-skills"]
+	path = external/wondelai-skills
+	url = https://github.com/wondelai/skills.git

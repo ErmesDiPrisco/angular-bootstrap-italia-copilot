@@ -1,0 +1,17 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "angular-bootstrap-italia-copilot",
+  "version": "0.1.0",
+  "description": "Agentic Angular development toolkit combining Angular best practices, Bootstrap Italia integration and specialized UI architecture.",
+  "author": {
+    "name": "Ermes Di Prisco"
+  },
+  "license": "MIT",
+  "keywords": [
+    "angular",
+    "bootstrap-italia",
+    "copilot",
+    "agents",
+    "skills"
+  ]
+}
