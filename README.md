@@ -105,6 +105,31 @@ task. Ogni agente selezionato deve comunque leggere e applicare tutte le skill
 assegnate. La mancata disponibilità di un agente necessario resta un fallimento.
 Il pacchetto completo deve continuare a includere tutte e sei le skill.
 
+La selezione viene ricalcolata anche per **ogni correzione**, indipendentemente
+dagli agenti coinvolti all'inizio. Le review già accettate restano valide finché
+non cambiano i comportamenti, i contratti o le dipendenze che hanno verificato:
+
+| Difetto da correggere, con gli altri ambiti invariati | Agenti richiamati |
+| --- | --- |
+| Logica, stato o service Angular | Solo Angular Architect |
+| Opzione pubblica Bootstrap Italia, senza impatto sull'integrazione Angular o sugli stili | Solo Bootstrap Italia Specialist |
+| Spaziatura CSS/SCSS dell'applicazione | Solo SCSS Specialist |
+| Lifecycle Angular collegato al disposal Bootstrap Italia | Angular Architect + Bootstrap Italia Specialist |
+
+Conta l'impatto della correzione, non chi ha segnalato il difetto né la sola
+estensione del file. Una review mai eseguita o fallita deve ancora essere
+completata; una review accettata e non invalidata non richiede nuove conferme.
+L'orchestratore passa al revisore il difetto, il diff della correzione e gli esiti
+pertinenti, senza ricominciare l'intera analisi.
+
+Ogni agente riutilizza le skill complete già disponibili e invariate nel proprio
+contesto. Le rilegge se sono cambiate o non più disponibili; un nuovo contesto
+deve comunque caricarle. Il riassunto di un altro agente non sostituisce le skill.
+Si rieseguono i controlli mancanti, falliti o invalidati dalle modifiche: una
+correzione SCSS può richiedere una nuova build senza richiamare Angular Architect.
+Quando le review necessarie sono accettate e i controlli sono validi, il ciclo
+termina senza un ulteriore giro di conferme.
+
 Se durante analisi o review emerge una nuova dipendenza, l'orchestratore aggiorna
 la selezione e acquisisce l'analisi mancante prima di accettare la modifica.
 Build e test pertinenti rimangono obbligatori; una fix solo Angular non richiede
@@ -183,6 +208,20 @@ In un'applicazione Angular di prova, verificare:
 7. Un componente condiviso simile ma incompatibile viene scartato con motivazione
    basata sui suoi contratti. Il nuovo componente ha una responsabilità distinta;
    un'estensione compatibile verifica invece i consumatori esistenti.
+8. Dopo una prima implementazione che coinvolge tutti e tre gli specialisti,
+   far emergere un difetto solo Angular: la correzione e la nuova review
+   coinvolgono soltanto Angular Architect; le approvazioni valide degli altri
+   due restano acquisite. Ripetere separatamente con un difetto solo SCSS e con
+   un'opzione Bootstrap Italia senza impatto sugli altri ambiti. Verificare le
+   invocazioni effettive, non solo il resoconto dell'orchestratore.
+9. Dopo una correzione che cambia più domini, verificare che vengano richiamati
+   tutti e soli gli specialisti interessati. Controllare che un test già passato
+   venga ripetuto quando cambia un suo input e che non venga rilanciato su input
+   invariati senza una nuova ragione. Una build dopo modifiche SCSS è pertinente.
+10. Nello stesso contesto con skill complete e invariate, verificare che non
+    vengano rilette solo per una nuova fase. In un nuovo contesto, verificare
+    invece il caricamento delle skill obbligatorie. Non considerare questo
+    comportamento garantito dai soli test statici del pacchetto.
 
 Registrare versioni di VS Code/Copilot, modello, Angular e Bootstrap Italia,
 tracce di delega, comandi e risultati. Il protocollo è basato su istruzioni:

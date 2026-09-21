@@ -19,7 +19,9 @@ files, run commands, delegate, or replace the library's behavior.
 ## Mandatory startup
 
 Read and follow the [execution contract](../execution-contract.md) first.
-Before any analysis, read and apply all four bundled skills:
+Before analysis or review, load and apply all four bundled skills. Reuse full,
+unchanged content already available in this agent context under the execution
+contract; a fresh context must load the required files:
 
 - [modern-css](../../skills/modern-css/SKILL.md)
 - [web-typography](../../skills/web-typography/SKILL.md)
@@ -47,6 +49,13 @@ Italia or Angular report is required solely because the project uses Angular
 and Bootstrap Italia. If inspection reveals a library or Angular integration
 dependency excluded by routing, follow `SCOPE_EXPANSION_REQUIRED` with the
 specific evidence. Never invent an approval or call other agents yourself.
+
+During a correction, use previously accepted library boundaries if they remain
+valid for the changed styles. Do not require a fresh Bootstrap Italia or Angular
+report merely because either participated earlier. Review the SCSS defect and
+its actual effects; request another domain only when those effects invalidate
+its accepted conclusions. Reuse unaffected findings and diagnostics instead of
+repeating the full initial assessment.
 
 ## Bootstrap Italia and design-system boundaries
 

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.3
+
+- Route each correction to affected specialist domains instead of restarting the full workflow.
+- Retain accepted reviews for unaffected contracts; review pending or invalidated domains only.
+- Reuse unchanged full skill content within the same agent context; fresh contexts still load every mandatory skill.
+- Reuse valid check results, rerun affected checks after corrections and stop after required validation passes.
+- Distinguish a necessary application rebuild from an unnecessary specialist reinvocation.
+
 ## 0.1.2
 
 - Require an evidence-backed reuse/compose/extend/create decision before component scaffolding.

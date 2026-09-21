@@ -92,6 +92,16 @@ skill evidence or completion markers. If a dependency is unclear, inspect the
 affected code first and invoke the specific specialist whose contract remains
 uncertain; do not automatically invoke everyone.
 
+Apply this routing to each defect and correction cycle, not just the initial
+request. A task that originally needed all three specialists can later need only
+SCSS for a spacing correction. Preserve accepted, unaffected domain reviews under
+the execution contract; do not call the other agents merely because they
+participated earlier or because an overall final review is being completed.
+This is symmetric: an Angular-only correction does not recall Bootstrap Italia
+or SCSS; a library-only correction does not recall Angular or SCSS. Determine
+the actual dependencies each time, including when another specialist reported
+the defect. Reuse accepted reports; do not ask their authors to reconfirm them.
+
 Each invoked specialist still uses all skills assigned to it. A required agent
 or skill being unavailable is a failure, never a reason to classify its domain
 as unaffected. Reassess routing whenever analysis or the diff expands scope;
@@ -251,12 +261,22 @@ the missing environment/check; do not declare the implementation complete.
 Recheck the final diff against the routing decision. If it exposes an overlooked
 domain, obtain that specialist's analysis before accepting the change, then
 perform its applicable validation and review.
-Send the final diff and actual check results only to the selected required specialists for a
-`REVIEW` invocation. Each re-reads/applies its skills and reports evidence for
-the implemented result. Analysis approval is not final review. Fix review
-failures and repeat affected checks/reviews; changes invalidate prior approval
-of the changed contract. Preserve unrelated user changes and verify the library
-and plugin skill sources were not modified while implementing the application.
+Obtain an implementation `REVIEW` from each required specialist whose domain has
+not yet passed review of the actual result. Analysis approval is not final review.
+Each active specialist applies its mandatory skills using the execution contract's
+context reuse rules; do not force rereads of unchanged content already available.
+
+For review defects, follow the execution contract's incremental correction rules.
+Send only the finding, correction diff and relevant results to the specialists
+whose domains are affected. Retain unaffected accepted reviews and check results;
+do not restart all analyses or repeat all reviews after a local fix. A pure SCSS
+correction requires only SCSS review even if Angular and Bootstrap Italia were
+required earlier. Involve either again only when the actual correction affects
+its contracts. Repeat invalidated checks, including the build after compiled
+inputs change, without treating a build as a reason to summon unrelated agents.
+Once all required reviews and checks are valid, finish without an extra round
+of confirmations. Preserve unrelated user changes and verify the library and
+plugin skill sources were not modified while implementing the application.
 
 ## Final response and completion
 

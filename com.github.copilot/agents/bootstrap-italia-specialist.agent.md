@@ -28,7 +28,9 @@ The orchestrator executes checks; report proposed checks separately from results
 ## Mandatory startup
 
 Read and follow the [execution contract](../execution-contract.md) first.
-Before any analysis, read and apply all three bundled skills:
+Before analysis or review, load and apply all three bundled skills. Reuse full,
+unchanged content already available in this agent context under the execution
+contract; a fresh context must load the required files:
 
 - [angular-bootstrap-italia](../../skills/angular-bootstrap-italia/SKILL.md)
 - [ponytail](../../skills/ponytail/SKILL.md), Full mode
