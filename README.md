@@ -68,11 +68,48 @@ Una skill obbligatoria assente, non letta o non applicata rende il task **FAILED
 Le sole frasi “skill usata” non bastano. Una ripetizione correttiva deve effettuare
 il lavoro mancante; non può limitarsi ad aggiungere una conferma.
 
-Gli specialisti sono di sola lettura. L'orchestratore implementa dopo le analisi
-accettate e richiede una revisione del risultato finale ai soli specialisti
-necessari. CSS moderno e tipografia
-rispettano il design system esistente e i contratti di Bootstrap Italia; non ne
-sostituiscono i componenti con implementazioni alternative.
+Gli specialisti sono di sola lettura. L'orchestratore implementa secondo il
+percorso selezionato e richiede sempre una revisione del risultato finale ai soli
+specialisti necessari. CSS moderno e tipografia rispettano il design system
+esistente e i contratti di Bootstrap Italia; non ne sostituiscono i componenti
+con implementazioni alternative.
+
+## Percorso breve e percorso completo
+
+Dopo l'ispezione, l'orchestratore registra `Workflow: SIMPLE_FIX` oppure
+`Workflow: STANDARD`, con una motivazione. La scelta del percorso è distinta
+dalla scelta degli specialisti: una modifica complessa solo Angular continua a
+coinvolgere soltanto Angular Architect.
+
+| Percorso | Condizioni | Flusso |
+| --- | --- | --- |
+| SIMPLE_FIX | Fix locale in un solo dominio, causa chiara, risultato verificabile, design e contratti invariati | Skill obbligatorie → implementazione → controlli pertinenti → review dello specialista |
+| STANDARD | Nuovi componenti, scelte progettuali, più domini, rischi o incertezze | Analisi degli specialisti necessari → implementazione → controlli → review |
+
+Il percorso breve esclude modifiche a API pubbliche, contratti dei consumatori,
+lifecycle, gestione asincrona/cancellazione, SSR, sicurezza/permessi, contratti
+dei dati e comportamento accessibile. Esclude anche modifiche a dipendenze o
+configurazione. Una riga di codice non rende automaticamente semplice una fix.
+I criteri completi sono nel contratto comune.
+
+Una correzione locale di un calcolo Angular può quindi richiedere **una sola
+chiamata** all'Angular Architect, per la review finale, se passa al primo tentativo.
+Una correzione di spaziatura locale può seguire lo stesso percorso con SCSS,
+purché non alteri altri contratti. Un problema di disposal Bootstrap Italia
+rimane STANDARD con Angular e Bootstrap Italia.
+
+Se emergono rischi, il flusso passa a STANDARD: lo specialista segnala
+`WORKFLOW_ESCALATION_REQUIRED`, oppure `SCOPE_EXPANSION_REQUIRED` se serve un
+nuovo dominio. L'orchestratore acquisisce l'analisi necessaria prima di ulteriori
+modifiche dipendenti e riconcilia il codice già scritto. La prima review del
+percorso breve non richiede un inesistente report di analisi.
+
+Restano obbligatori tutte le skill assegnate, le evidenze, la review del codice
+effettivo e i controlli pertinenti, inclusa la build per il lavoro Angular.
+I report contengono evidenze delle skill, risultati/criticità e validazioni,
+senza sezioni estranee alla fix. Un controllo necessario indisponibile blocca
+il completamento; una skill obbligatoria non usata fa fallire il task.
+Il percorso breve riduce le chiamate preventive, non garantisce tempi o costi.
 
 ## Riuso e delega condizionale
 
@@ -144,9 +181,9 @@ Selezionare l'orchestratore nel progetto Angular e chiedere:
 > tastiera, focus e layout mobile. Esegui build e test pertinenti; riporta le
 > evidenze delle skill usate da ciascuno specialista.
 
-Il flusso è: ispezione del progetto, scelta degli specialisti, decisione di riuso
-quando applicabile, analisi dei domini coinvolti, implementazione, controlli e
-review dei soli specialisti necessari. La fattibilità Bootstrap Italia viene
+Per questa creazione il flusso STANDARD è: ispezione del progetto, scelta degli
+specialisti, decisione di riuso, analisi dei domini coinvolti, implementazione,
+controlli e review dei soli specialisti necessari. La fattibilità Bootstrap Italia viene
 verificata quando il suo contratto è coinvolto. Versioni e API pertinenti si
 verificano nel progetto; non vengono
 aggiornate automaticamente. L'assenza di un controllo necessario impedisce di
@@ -198,10 +235,12 @@ In un'applicazione Angular di prova, verificare:
    non deve essere bloccata a runtime da una skill di un dominio non coinvolto.
 4. Una richiesta non supportata dalle API pubbliche produce una spiegazione
    verificata e alternative; non genera patch della libreria o hack CSS.
-5. Una fix di stato o validazione Angular con UI e integrazione della libreria
-   invariate invoca soltanto Angular Architect in analisi e review. Non legge
-   le skill Bootstrap Italia/SCSS e non richiede i rispettivi report. Esegue
-   comunque build e test di regressione pertinenti.
+5. Una fix locale di un calcolo Angular con causa nota, design, API, UI e
+   integrazione della libreria invariati usa SIMPLE_FIX: solo Angular Architect
+   in REVIEW dopo implementazione e controlli, senza ANALYSIS preventiva.
+   Non legge le skill Bootstrap Italia/SCSS e non richiede i loro report.
+   Esegue comunque build e verifiche di regressione pertinenti. Se la review
+   passa, la traccia deve mostrare una sola invocazione specialistica.
 6. Una fix inizialmente classificata Angular-only che rivela un problema di
    disposal Bootstrap Italia aggiunge lo specialista della libreria prima di
    proseguire. Non aggiunge SCSS se non emergono implicazioni visive.
@@ -222,6 +261,29 @@ In un'applicazione Angular di prova, verificare:
     vengano rilette solo per una nuova fase. In un nuovo contesto, verificare
     invece il caricamento delle skill obbligatorie. Non considerare questo
     comportamento garantito dai soli test statici del pacchetto.
+
+11. Una fix locale di spaziatura su un elemento dell'applicazione, senza impatto
+    su geometria della libreria, binding, semantica o comportamento accessibile,
+    usa SIMPLE_FIX con sola review SCSS. Mantiene tutte e quattro le sue skill,
+    diagnostica tipografica compatta e controlli di layout pertinenti; non
+    avvia un audit dell'intera applicazione.
+12. Una modifica di una riga a focus, API pubblica o lifecycle usa STANDARD:
+    non salta l'analisi perché il diff è piccolo. Se il rischio emerge durante
+    una review SIMPLE_FIX, questa segnala l'escalation; il flusso acquisisce
+    l'analisi mancante prima di proseguire, senza coinvolgere domini estranei.
+13. Nel percorso breve, una review con skill mancante/non usata produce FAILED
+    senza approvazione sostitutiva dell'orchestratore. Un controllo necessario
+    non eseguibile produce BLOCKED; una build fallita impedisce PASSED.
+14. Una prima review individua un difetto locale: viene corretta e riesaminata
+    solo l'area interessata, con i controlli invalidati ripetuti. Non si promette
+    una sola chiamata quando il primo risultato richiede correzioni.
+
+Per confrontare con la versione precedente, usare lo stesso task e stato iniziale
+dell'applicazione in sessioni nuove, con modello e ambiente uguali. Annotare
+correttezza del risultato, chiamate per fase/dominio, letture delle skill,
+verifiche duplicate su input invariati, durata e consumo mostrato dall'host.
+Confrontare sia fix semplici sia un componente completo; meno chiamate non basta
+se si perdono difetti o si dichiara successo con controlli mancanti.
 
 Registrare versioni di VS Code/Copilot, modello, Angular e Bootstrap Italia,
 tracce di delega, comandi e risultati. Il protocollo è basato su istruzioni:

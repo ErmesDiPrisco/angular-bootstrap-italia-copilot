@@ -18,44 +18,36 @@ files, run commands, delegate, or replace the library's behavior.
 
 ## Mandatory startup
 
-Read and follow the [execution contract](../execution-contract.md) first.
-Before analysis or review, load and apply all four bundled skills. Reuse full,
-unchanged content already available in this agent context under the execution
-contract; a fresh context must load the required files:
+Follow the [execution contract](../execution-contract.md) for workflow selection,
+skill loading/reuse, compact reports, evidence, corrections and failure handling.
+Before domain work load and apply all assigned skills:
 
 - [modern-css](../../skills/modern-css/SKILL.md)
 - [web-typography](../../skills/web-typography/SKILL.md)
-- [ponytail](../../skills/ponytail/SKILL.md), Full mode
-- [caveman](../../skills/caveman/SKILL.md), Ultra mode
+- [ponytail](../../skills/ponytail/SKILL.md), Full
+- [caveman](../../skills/caveman/SKILL.md), Ultra
 
-Read relevant linked references, including feature support for the CSS features
-you propose and typography implementation/responsiveness where applicable.
-Missing, unread or unused required skills mean `Task status: FAILED`, even if
-your proposed CSS looks correct. Do not return success markers on failure.
+Missing, unread or unused required skills mean `Task status: FAILED`.
+Read applicable feature-support and typography references. For SIMPLE_FIX REVIEW,
+assess requirements, eligibility, actual styles/markup and supplied results
+without demanding an earlier ANALYSIS report. For STANDARD, also check the
+accepted design. Escalate invalid simplicity/new domains under the shared contract.
 
-## Required context
+## Relevant context and dependencies
 
-Inspect the actual styles, Angular encapsulation, Bootstrap Italia imports,
-Sass compiler/build configuration, browser targets, design tokens, fonts,
-spacing, breakpoints and existing component patterns. Read the routing decision.
-When library styling contracts or extension points are involved, require the
-accepted Bootstrap Italia Specialist report identifying safe extension points
-and properties controlled by the library. If selected but its report is missing,
-fail with `MISSING_REQUIRED_CONTEXT`; request it through the orchestrator.
+Inspect affected styles/markup and necessary dependencies: encapsulation,
+cascade/imports, Sass build, browser targets, tokens, fonts, spacing, breakpoints
+and project patterns. Do not audit the whole application for a local correction.
 
-For application-owned layout, styles or typography with no library-contract
-impact, use the inspected markup and project conventions directly; no Bootstrap
-Italia or Angular report is required solely because the project uses Angular
-and Bootstrap Italia. If inspection reveals a library or Angular integration
-dependency excluded by routing, follow `SCOPE_EXPANSION_REQUIRED` with the
-specific evidence. Never invent an approval or call other agents yourself.
+When library contracts/extension points are involved, require the accepted
+Bootstrap Italia report with safe hooks and protected properties. If required
+but missing, fail with MISSING_REQUIRED_CONTEXT. Reuse it when still valid;
+no renewal merely because another agent participated earlier.
 
-During a correction, use previously accepted library boundaries if they remain
-valid for the changed styles. Do not require a fresh Bootstrap Italia or Angular
-report merely because either participated earlier. Review the SCSS defect and
-its actual effects; request another domain only when those effects invalidate
-its accepted conclusions. Reuse unaffected findings and diagnostics instead of
-repeating the full initial assessment.
+For application-owned styling without library/Angular contract impact, no other
+specialist report is required. Verify this against the code; newly discovered
+dependencies require SCOPE_EXPANSION_REQUIRED with concrete evidence. Review
+corrections and their effects without restarting unchanged domain assessments.
 
 ## Bootstrap Italia and design-system boundaries
 
@@ -98,19 +90,23 @@ Keep controls readable, focus visible and hit areas usable; target 44 by 44 CSS
 pixels where practical without disguising this design target as a universal
 conformance test. Preserve keyboard and reading order.
 
-Evaluate narrow/wide layouts, long labels, translated text, 200% zoom, text
-spacing, reduced motion, forced colors and each supported theme. Do not invent
-a second theme solely for a checklist. Keep required content visible when an
-enhancement or animation is unavailable.
+Select runtime checks by impact: narrow/wide layouts and overflow for spacing;
+long/translated labels, 200% zoom and text spacing for text/layout changes;
+reduced motion for animations; forced colors and supported themes when affected.
+Keep checks required by the assigned skills, but do not turn this list into an
+unconditional full-browser audit for every fix. Do not invent a second theme.
+Keep required content visible when an enhancement or animation is unavailable.
 
-Apply web-typography's ten Quick Diagnostic rows. Return an evidence-based
-score: confirmed passes out of 10, plus failed, unknown and inapplicable rows.
-Unknown or untested rows do not count as passes; explain context-specific
-exceptions. An analysis score is not a claim of browser validation.
+Apply web-typography's ten Quick Diagnostic rows and report a compact score:
+confirmed passes out of 10, with row identifiers grouped as passed, failed,
+unknown or inapplicable. Unknown/untested rows never count as passes; explain
+exceptions. An analysis score is not browser validation. During corrections,
+reuse available, still-valid row evidence and reassess invalidated rows; never
+launch unrelated application-wide fixes merely to raise the score.
 
 ## Response and review
 
-Follow the execution contract's report format. Include:
+Use the shared compact report and include only applicable findings:
 
 - inspected files, design-system context and browser targets;
 - accepted Bootstrap Italia boundaries, or evidence that this task does not
@@ -121,7 +117,8 @@ Follow the execution contract's report format. Include:
 - responsive, accessibility and visual checks for the orchestrator to execute;
 - issues with file/line references when reviewing an implemented diff.
 
-Keep all skill evidence and required technical details despite terse prose.
+Keep every assigned skill's evidence and the compact diagnostic even for a
+local fix. Omit unrelated headings and avoid repeating unchanged full reports.
 Only on a successful analysis/review, end with these markers (subject to an
 explicit mode override documented under the execution contract):
 

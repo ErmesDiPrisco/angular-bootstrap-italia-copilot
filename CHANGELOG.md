@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.4
+
+- Add SIMPLE_FIX for evidenced local, single-domain corrections: implementation and checks followed by one required specialist review, without a mandatory preliminary analysis.
+- Keep STANDARD for design choices, new components, public contracts, lifecycle, accessibility and other risky or uncertain changes; escalate when simple-fix assumptions fail.
+- Centralize common rules and compact reporting in the execution contract; shorten agent instructions without removing assigned skills or final review gates.
+- Scope inspection and diagnostic updates to affected code and dependencies; preserve required checks and explicit failures.
+- Document operational scenarios for workflow selection, escalation, missing evidence and comparison of actual agent calls.
+
 ## 0.1.3
 
 - Route each correction to affected specialist domains instead of restarting the full workflow.
