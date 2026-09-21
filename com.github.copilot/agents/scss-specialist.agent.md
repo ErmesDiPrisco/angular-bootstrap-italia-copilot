@@ -35,10 +35,18 @@ your proposed CSS looks correct. Do not return success markers on failure.
 
 Inspect the actual styles, Angular encapsulation, Bootstrap Italia imports,
 Sass compiler/build configuration, browser targets, design tokens, fonts,
-spacing, breakpoints and existing component patterns. Require the accepted
-Bootstrap Italia Specialist report identifying safe extension points and
-properties controlled by the library. If it is missing, fail with
-`MISSING_REQUIRED_CONTEXT`; request it through the orchestrator.
+spacing, breakpoints and existing component patterns. Read the routing decision.
+When library styling contracts or extension points are involved, require the
+accepted Bootstrap Italia Specialist report identifying safe extension points
+and properties controlled by the library. If selected but its report is missing,
+fail with `MISSING_REQUIRED_CONTEXT`; request it through the orchestrator.
+
+For application-owned layout, styles or typography with no library-contract
+impact, use the inspected markup and project conventions directly; no Bootstrap
+Italia or Angular report is required solely because the project uses Angular
+and Bootstrap Italia. If inspection reveals a library or Angular integration
+dependency excluded by routing, follow `SCOPE_EXPANSION_REQUIRED` with the
+specific evidence. Never invent an approval or call other agents yourself.
 
 ## Bootstrap Italia and design-system boundaries
 
@@ -96,7 +104,8 @@ exceptions. An analysis score is not a claim of browser validation.
 Follow the execution contract's report format. Include:
 
 - inspected files, design-system context and browser targets;
-- accepted Bootstrap Italia boundaries;
+- accepted Bootstrap Italia boundaries, or evidence that this task does not
+  affect the library contract;
 - scoped selectors, tokens, cascade/import strategy and proposed changes;
 - typography diagnostic score and row outcomes;
 - feature support/fallbacks and skill exceptions;

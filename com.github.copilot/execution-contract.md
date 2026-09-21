@@ -5,8 +5,10 @@ domain analysis. It defines acceptance of work, not a runtime security boundary.
 
 ## Load the actual bundled skills
 
-1. Read every `SKILL.md` linked in your agent's Mandatory startup section in the
-   current invocation. A name, description, activation marker, parent summary
+1. Read every required `SKILL.md` from your agent's Mandatory startup section in
+   the current invocation. The orchestrator selects its conditional domain skills
+   using its routing rules; each invoked specialist reads all skills assigned to
+   that specialist. A name, description, activation marker, parent summary
    or earlier subagent invocation is not the skill's full instructions.
 2. Resolve links relative to the agent file inside the installed plugin. The
    plugin's `skills/` folder is distinct from the target application's root.
@@ -58,6 +60,13 @@ system; request additional skills only for explicitly expanded scope.
 
 ## Delegation and evidence
 
+The orchestrator determines which specialist domains are affected before
+delegating. A skipped, inapplicable specialist needs a reason in the routing
+decision, not a call, report, skill load or success marker. This applies to both
+analysis and final review. Agent availability must never determine applicability.
+All skill obligations remain binding for each selected specialist. A package
+validation still requires all six bundled skills even if one task uses fewer.
+
 The orchestrator must call the named custom agents through the host's subagent
 tool. Writing an agent name, using a handoff, or assigning a generic agent the
 same role is not equivalent. If the host cannot invoke a required custom agent,
@@ -66,7 +75,8 @@ fail with `AGENT_UNAVAILABLE`; never silently perform its work in the parent.
 Each delegated request must provide the task ID, analysis or review phase,
 original requirements, target application path, resolved plugin/skill paths,
 versions and their evidence, relevant files, constraints, dependencies and
-acceptance checks. Subagents do not automatically inherit the parent's skills
+acceptance checks, plus the routing decision and reuse candidates where relevant.
+Subagents do not automatically inherit the parent's skills
 or earlier specialist results. Pass accepted reports explicitly when needed.
 
 Specialists are read-only. They report proposed commands and checks; only the
@@ -74,6 +84,13 @@ orchestrator edits application files or executes build/test commands. Web access
 is research, not permission to send project code or secrets to external sites.
 Use official sources and distinguish documentation, source observations,
 inferences and executed checks. Uncertainty must remain visible.
+
+If analysis or review uncovers a previously excluded domain, return
+`Task status: FAILED`, `Failure code: SCOPE_EXPANSION_REQUIRED`, the affected
+files/contracts and the specific additional expertise needed. The orchestrator
+must update routing, obtain the newly required analysis and resume the affected
+work only after acceptance. This is a changed scope, not a missing-skill retry;
+it does not waive the skill failure rule or justify unrelated specialist calls.
 
 Every specialist response starts with:
 
@@ -105,7 +122,8 @@ Recovery: <specific correction needed>
 ```
 
 Use `SKILL_UNAVAILABLE`, `SKILL_NOT_USED`, `REFERENCE_UNAVAILABLE`,
-`AGENT_UNAVAILABLE`, `MISSING_REQUIRED_CONTEXT`, `PUBLIC_CONTRACT_UNVERIFIED`
+`AGENT_UNAVAILABLE`, `MISSING_REQUIRED_CONTEXT`, `PUBLIC_CONTRACT_UNVERIFIED`,
+`SCOPE_EXPANSION_REQUIRED`
 or `REVIEW_FAILED` as appropriate. Do not add successful completion markers.
 
 ## Acceptance gate
