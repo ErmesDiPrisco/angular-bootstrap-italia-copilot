@@ -28,7 +28,11 @@ Before domain work load and apply all assigned skills:
 - [caveman](../../skills/caveman/SKILL.md), Ultra
 
 Missing, unread or unused required skills mean `Task status: FAILED`.
-Read applicable feature-support and typography references. For SIMPLE_FIX REVIEW,
+Select references for the actual CSS feature or typography question; do not load
+every layout, animation, font-pairing or font-loading guide for a spacing fix.
+Keep explicit skill requirements, including the typography diagnostic below.
+Read feature-support guidance when the chosen feature needs verification.
+For SIMPLE_FIX REVIEW,
 assess requirements, eligibility, actual styles/markup and supplied results
 without demanding an earlier ANALYSIS report. For STANDARD, also check the
 accepted design. Escalate invalid simplicity/new domains under the shared contract.

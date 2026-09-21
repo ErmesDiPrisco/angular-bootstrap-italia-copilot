@@ -25,6 +25,28 @@ define acceptance, not an executable runtime enforcement boundary.
 An unavailable, unread or unused required skill/reference fails that subtask.
 Stop dependent work; do not return success markers.
 
+### Select references on demand
+
+Treat each loaded SKILL.md as the entry point, not a request to ingest its whole
+directory. Follow its task-based reading instructions and explicit mandatory
+references. A linked example, related topic or sibling file is not automatically
+required. Do not recursively read every link, glob-read references/examples, or
+load a domain's skills merely because they are installed in the plugin.
+
+Before opening an additional reference, identify the concrete question, changed
+contract or applicable skill instruction it resolves. Use the skill's index and
+targeted filename/heading searches to locate it; stop expanding once the relevant
+requirements and uncertainties are covered. Open additional guidance if new
+evidence requires it, not to exhaust the reference list. Missing required
+references still fail; this rule cannot waive a skill's explicit reading gates.
+
+Pass relevant reference paths and their purpose in the delegation packet when
+known, not whole unrelated documents. This is a starting point, not a whitelist:
+specialists must add any reference required by their own skill or findings.
+Record actual reads in existing Skill evidence; no separate reading-plan report
+or inventory of skipped files is required. The package validator's exhaustive
+link checks are maintenance checks, not the runtime reading procedure.
+
 ## Precedence and boundaries
 
 Follow platform instructions and explicit user requirements. Preserve installed

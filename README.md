@@ -62,6 +62,16 @@ incluse in [skills](skills/): non occorre installarle separatamente o inizializz
 `external/` per usare il plugin. `refactoring-ui` e `top-design` sono riferimenti
 facoltativi upstream, non dipendenze incluse.
 
+Le skill importate restano intatte. A runtime, si caricano solo le skill richieste
+dagli ambiti selezionati: il relativo `SKILL.md` viene letto integralmente, mentre
+referenze ed esempi collegati si aprono secondo la domanda concreta e le istruzioni
+della skill. Non si leggono automaticamente tutte le directory o tutti i link.
+Per esempio, un intervento HTTP Angular non carica anche le guide forms, routing
+o SSR senza una dipendenza effettiva; un Modal non richiede l'esempio Carousel.
+Le referenze esplicitamente obbligatorie per il task restano obbligatorie.
+SCSS continua a usare modern-css e web-typography, oltre alle skill trasversali:
+questa selezione degli approfondimenti non elimina skill assegnate agli agenti.
+
 Il [contratto di esecuzione](com.github.copilot/execution-contract.md) impone la
 lettura dei file reali e delle referenze pertinenti, con evidenze per ogni skill.
 Una skill obbligatoria assente, non letta o non applicata rende il task **FAILED**.
@@ -277,6 +287,13 @@ In un'applicazione Angular di prova, verificare:
 14. Una prima review individua un difetto locale: viene corretta e riesaminata
     solo l'area interessata, con i controlli invalidati ripetuti. Non si promette
     una sola chiamata quando il primo risultato richiede correzioni.
+15. Per un task HTTP Angular senza form, navigazione, SSR o lavoro visivo,
+    verificare nelle letture effettive che non vengano caricati quegli
+    approfondimenti. Le referenze HTTP, DI o test si aprono quando richieste dal
+    lavoro. Su un Modal non si legge l'esempio Carousel, mentre un Carousel
+    deve ancora caricare il proprio esempio e la guida testing. Una dipendenza
+    scoperta durante il lavoro deve ampliare le letture necessarie; la lista
+    iniziale non è un limite rigido. Le evidenze non devono dichiarare file mai letti.
 
 Per confrontare con la versione precedente, usare lo stesso task e stato iniziale
 dell'applicazione in sessioni nuove, con modello e ambiente uguali. Annotare

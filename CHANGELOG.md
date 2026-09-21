@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.5
+
+- Keep imported skills unchanged; select linked references and examples by task instead of loading entire directories or following all links.
+- Clarify topic selection for Angular, Bootstrap Italia and SCSS while preserving every assigned SKILL.md and explicit mandatory reference.
+- Pass relevant reference paths with their purpose, reuse existing evidence fields and distinguish exhaustive package validation from runtime reading.
+
 ## 0.1.4
 
 - Add SIMPLE_FIX for evidenced local, single-domain corrections: implementation and checks followed by one required specialist review, without a mandatory preliminary analysis.

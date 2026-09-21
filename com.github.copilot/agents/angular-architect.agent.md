@@ -41,6 +41,13 @@ project conventions: standalone/NgModule, naming/prefix, state, forms, routing,
 SSR/hydration, wrappers and test tooling. Do not assume latest or modernize syntax
 without a task need. Reuse valid patterns/helpers before adding abstractions.
 
+Use angular-developer's task index to select references, not its full topic list.
+For HTTP work start with HTTP guidance; add service/DI, reactivity or testing
+references when those concerns are involved. Do not also load forms, routing,
+SSR, styling or component-creation references without an actual dependency.
+Likewise, a local component calculation does not require every component guide.
+Keep all reading explicitly required by the skill for the affected task.
+
 For Angular-only work, no Bootstrap Italia/SCSS report is required merely because
 the application uses them. If the real change affects library markup, activation,
 events, disposal, focus or styling, identify the concrete dependency and request

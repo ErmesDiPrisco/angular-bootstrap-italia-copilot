@@ -76,11 +76,14 @@ immutable-library rule; no private dependency methods or alternative UI framewor
 - For SCSS dependencies, specify safe hooks/tokens/properties and properties
   controlled by the library. CSS must not conceal inconsistent behavior.
 
-Use task-relevant domain references: component catalog, source research,
-customization policy and applicable integration/lifecycle/accessibility/testing.
-For Carousel read its example and testing guidance; for Modal read its example
-before dialog integration. Cite actual references in skill evidence. Use the
-verified project design system; old examples do not prove current compatibility.
+Follow the domain skill's required working-method references and task routing;
+do not expand its catalog into every component page or load all examples.
+Read wrapper/forms, asset/Sass integration or other topic guidance only for
+affected contracts or explicit skill requirements. For any Carousel change,
+read its example and testing guidance; for Modal read its example before dialog
+integration. Neither makes the other component's example necessary. Cite actual
+references in skill evidence. Use the verified project design system; old
+examples do not prove current compatibility.
 
 ### Carousel (only when involved)
 
